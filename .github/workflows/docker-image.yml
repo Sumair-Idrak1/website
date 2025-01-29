@@ -1,0 +1,28 @@
+name: Deploy Flask with Nginx
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker
+      run: |
+        docker --version
+
+    - name: Build and Run Flask App with Nginx
+      run: |
+        docker-compose up --build -d
+        sleep 5
+        curl -I http://localhost:8080 || exit 1
+
+    - name: Stop and Remove Containers
+      run: |
+        docker-compose down
